@@ -94,7 +94,7 @@ fieldset.section legend { font-weight: bold; padding: 0 6px; color: var(--primar
   text-align: center;
   font-size: 12px;
 }
-.card .photo { width: 100%; height: 70px; border-radius: 6px; margin-bottom: 6px; }
+.card .photo { width: 100%; height: 70px; border-radius: 6px; margin-bottom: 6px; object-fit: cover; display: block; }
 .card .name { font-weight: bold; margin-bottom: 2px; min-height: 32px; }
 .card .brand { color: #666; font-size: 11px; }
 .card .price { margin: 4px 0; font-weight: bold; }

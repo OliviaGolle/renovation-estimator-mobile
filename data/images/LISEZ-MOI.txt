@@ -1,0 +1,5 @@
+Placez ici vos photos de produits (jpg/png), puis référencez-les dans data/products.json
+avec un champ "image" (ex: "image": "data/images/pm1.jpg"). Voir le README pour les détails.
+
+ATTENTION : ce dossier "mobile" est publié publiquement sur GitHub Pages. N'y mettez pas
+de photos protégées par le droit d'auteur (ex: photos Leroy Merlin) sans autorisation.

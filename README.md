@@ -39,6 +39,23 @@ Legrand Dooxie...) et non des données scrapées en temps réel — vérifiez le
 réels avant tout engagement. Modifiez ce fichier pour les ajuster (gardez la même
 structure que le fichier du dossier `data/`).
 
+## Afficher de vraies photos de produits
+
+Par défaut, chaque produit affiche un pavé de couleur en guise de vignette. Pour
+afficher une vraie photo :
+
+1. Placez l'image (jpg/png) dans `mobile/data/images/` (ex: `data/images/pm1.jpg`).
+2. Dans `mobile/data/products.json`, ajoutez un champ `"image"` à ce produit :
+   ```json
+   { "id": "pm1", "name": "...", "image": "data/images/pm1.jpg", ... }
+   ```
+3. Rechargez la page (ou repoussez sur GitHub Pages) : la photo remplace le pavé de couleur.
+
+⚠️ **Important si vous hébergez sur GitHub Pages** : ce dossier est **public**. Les photos
+des sites marchands (leroymerlin.fr, etc.) sont protégées par le droit d'auteur — ne les
+publiez pas dans un dépôt public sans autorisation. Préférez vos propres photos, ou gardez
+un dépôt privé si vous voulez utiliser des photos de fabricants/enseignes.
+
 ## Structure
 
 ```
