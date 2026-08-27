@@ -139,8 +139,11 @@ function renderGallery(container, products, selectedSet, onChange, opts = {}) {
     const photoHtml = p.image
       ? `<img class="photo" src="${escapeHtml(p.image)}" alt="${escapeHtml(p.name)}" loading="lazy" style="background:${p.color || "#ddd"}" onerror="this.onerror=null;this.removeAttribute('src');">`
       : `<div class="photo" style="background:${p.color || "#ddd"}"></div>`;
+    const linkedPhotoHtml = p.url
+      ? `<a class="product-photo-link" href="${escapeHtml(p.url)}" target="_blank" rel="noopener" aria-label="Voir ${escapeHtml(p.name)}">${photoHtml}</a>`
+      : photoHtml;
     card.innerHTML = `
-      ${photoHtml}
+      ${linkedPhotoHtml}
       <div class="name">${escapeHtml(p.name)}</div>
       <div class="brand">${escapeHtml(p.brand || "")}</div>
       <div class="price">${p.price.toFixed(2)} €${priceSuffix}</div>
