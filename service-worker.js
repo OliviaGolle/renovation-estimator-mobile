@@ -1,4 +1,4 @@
-const CACHE_NAME = "renovation-estimator-v11";
+const CACHE_NAME = "renovation-estimator-v12";
 const ASSETS = [
   "./",
   "./index.html",

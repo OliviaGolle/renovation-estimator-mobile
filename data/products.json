@@ -518,6 +518,32 @@
             "color": "#a8a8a8"
         }
     ],
+    "seche_serviette": [
+        {
+            "id": "ss1",
+            "name": "Sèche-serviette électrique blanc 500W",
+            "brand": "Sensea",
+            "price": 129.0,
+            "unit": "piece",
+            "color": "#f2f2f2"
+        },
+        {
+            "id": "ss2",
+            "name": "Sèche-serviette à eau chaude blanc",
+            "brand": "Sensea",
+            "price": 169.0,
+            "unit": "piece",
+            "color": "#eaeaea"
+        },
+        {
+            "id": "ss3",
+            "name": "Sèche-serviette électrique design noir",
+            "brand": "Sensea",
+            "price": 199.0,
+            "unit": "piece",
+            "color": "#2b2b2b"
+        }
+    ],
     "meuble_lave_main": [
         {
             "id": "ml1",

@@ -12,6 +12,7 @@ const ROOM_EXTRAS = {
     ["mitigeur_douche_bain", "Mitigeur douche/bain"],
     ["meuble_vasque", "Meuble vasque"],
     ["mitigeur_vasque", "Mitigeur vasque"],
+    ["seche_serviette", "Sèche-serviette"],
   ],
   "Toilette": [
     ["toilette", "Toilette"],
