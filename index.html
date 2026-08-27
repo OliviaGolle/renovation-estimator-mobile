@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Estimateur de rénovation</title>
+<meta name="theme-color" content="#1e5aa0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Rénovation">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header id="app-header">
+    <h1>Estimateur de rénovation</h1>
+    <div id="grand-total">Total général : 0.00 €</div>
+  </header>
+
+  <nav id="tabs"></nav>
+
+  <main id="rooms"></main>
+
+  <div id="report-view" class="hidden">
+    <div class="report-toolbar no-print">
+      <button id="back-btn">← Retour à l'estimation</button>
+      <button id="print-btn">Imprimer / Enregistrer en PDF</button>
+    </div>
+    <div id="report-content"></div>
+  </div>
+
+  <footer id="app-footer" class="no-print">
+    <button id="generate-report-btn">Générer le devis</button>
+  </footer>
+
+  <script src="app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('service-worker.js').catch(() => {});
+      });
+    }
+  </script>
+</body>
+</html>

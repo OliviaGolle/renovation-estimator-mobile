@@ -1,0 +1,602 @@
+{
+    "peinture_mur": [
+        {
+            "id": "pm1",
+            "name": "Peinture murs blanche mate Luxens 10L",
+            "brand": "Luxens",
+            "price": 39.90,
+            "unit": "m2_per_pot",
+            "coverage_m2": 60,
+            "color": "#f5f5f0"
+        },
+        {
+            "id": "pm2",
+            "name": "Peinture murs blanche velours Luxens 10L",
+            "brand": "Luxens",
+            "price": 49.90,
+            "unit": "m2_per_pot",
+            "coverage_m2": 60,
+            "color": "#f2f2ea"
+        },
+        {
+            "id": "pm3",
+            "name": "Peinture murs blanche satinée multi-supports 10L",
+            "brand": "Leroy Merlin",
+            "price": 54.90,
+            "unit": "m2_per_pot",
+            "coverage_m2": 55,
+            "color": "#eeeee6"
+        }
+    ],
+    "peinture_plafond": [
+        {
+            "id": "pp1",
+            "name": "Peinture plafond blanche anti-goutte Luxens 10L",
+            "brand": "Luxens",
+            "price": 44.90,
+            "unit": "m2_per_pot",
+            "coverage_m2": 60,
+            "color": "#fafafa"
+        },
+        {
+            "id": "pp2",
+            "name": "Peinture plafond blanche mate Leroy Merlin 10L",
+            "brand": "Leroy Merlin",
+            "price": 34.90,
+            "unit": "m2_per_pot",
+            "coverage_m2": 55,
+            "color": "#f7f7f2"
+        },
+        {
+            "id": "pp3",
+            "name": "Peinture plafond blanche extra-mate Luxens 10L",
+            "brand": "Luxens",
+            "price": 49.90,
+            "unit": "m2_per_pot",
+            "coverage_m2": 65,
+            "color": "#fefefe"
+        }
+    ],
+    "sol_carrelage": [
+        {
+            "id": "sc1",
+            "name": "Carrelage sol grès cérame gris 60x60 Artens",
+            "brand": "Artens",
+            "price": 14.90,
+            "unit": "m2",
+            "color": "#9e9e9e"
+        },
+        {
+            "id": "sc2",
+            "name": "Carrelage sol effet béton beige 60x60 Artens",
+            "brand": "Artens",
+            "price": 17.90,
+            "unit": "m2",
+            "color": "#cbbfa9"
+        },
+        {
+            "id": "sc3",
+            "name": "Carrelage sol effet pierre 45x45 Artens",
+            "brand": "Artens",
+            "price": 12.90,
+            "unit": "m2",
+            "color": "#b6ab97"
+        }
+    ],
+    "primaire_accrochage": [
+        {
+            "id": "pa1",
+            "name": "Primaire d'accrochage universel 10L",
+            "brand": "Leroy Merlin",
+            "price": 34.90,
+            "unit": "m2_per_pot",
+            "coverage_m2": 50,
+            "color": "#e8e2d0"
+        },
+        {
+            "id": "pa2",
+            "name": "Primaire d'accrochage carrelage sol 5L",
+            "brand": "Toupret",
+            "price": 24.90,
+            "unit": "m2_per_pot",
+            "coverage_m2": 25,
+            "color": "#ded6c2"
+        },
+        {
+            "id": "pa3",
+            "name": "Primaire d'accrochage haute adhérence 10L",
+            "brand": "Weber",
+            "price": 44.90,
+            "unit": "m2_per_pot",
+            "coverage_m2": 60,
+            "color": "#d9d0ba"
+        }
+    ],
+    "colle_carrelage": [
+        {
+            "id": "cc1",
+            "name": "Colle carrelage mortier-colle sac 25kg",
+            "brand": "Weber",
+            "price": 19.90,
+            "unit": "m2_per_pot",
+            "coverage_m2": 5,
+            "color": "#b0a89a"
+        },
+        {
+            "id": "cc2",
+            "name": "Colle carrelage flexible sac 25kg",
+            "brand": "Toupret",
+            "price": 24.90,
+            "unit": "m2_per_pot",
+            "coverage_m2": 5,
+            "color": "#a89f8f"
+        },
+        {
+            "id": "cc3",
+            "name": "Colle carrelage grand format sac 25kg",
+            "brand": "Weber",
+            "price": 29.90,
+            "unit": "m2_per_pot",
+            "coverage_m2": 4,
+            "color": "#9f9585"
+        }
+    ],
+    "joint_carrelage": [
+        {
+            "id": "jc1",
+            "name": "Joint de carrelage fin sac 5kg",
+            "brand": "Weber",
+            "price": 12.90,
+            "unit": "m2_per_pot",
+            "coverage_m2": 20,
+            "color": "#e0ddd4"
+        },
+        {
+            "id": "jc2",
+            "name": "Joint de carrelage hydrofuge sac 5kg",
+            "brand": "Toupret",
+            "price": 15.90,
+            "unit": "m2_per_pot",
+            "coverage_m2": 18,
+            "color": "#d6d2c6"
+        },
+        {
+            "id": "jc3",
+            "name": "Joint de carrelage large sac 5kg",
+            "brand": "Weber",
+            "price": 17.90,
+            "unit": "m2_per_pot",
+            "coverage_m2": 15,
+            "color": "#ccc7b8"
+        }
+    ],
+    "sol_parquet": [
+        {
+            "id": "sp1",
+            "name": "Parquet stratifié chêne clair Sensa 8mm",
+            "brand": "Sensa",
+            "price": 16.90,
+            "unit": "m2",
+            "color": "#d8b98a"
+        },
+        {
+            "id": "sp2",
+            "name": "Parquet stratifié chêne naturel Sensa 8mm",
+            "brand": "Sensa",
+            "price": 19.90,
+            "unit": "m2",
+            "color": "#c79b66"
+        },
+        {
+            "id": "sp3",
+            "name": "Parquet stratifié chêne gris Sensa 10mm",
+            "brand": "Sensa",
+            "price": 22.90,
+            "unit": "m2",
+            "color": "#a9a094"
+        }
+    ],
+    "isolant_parquet": [
+        {
+            "id": "ip1",
+            "name": "Sous-couche isolante mousse 3mm rouleau 15m²",
+            "brand": "Sensa",
+            "price": 14.90,
+            "unit": "m2_per_pot",
+            "coverage_m2": 15,
+            "color": "#e3d9c8"
+        },
+        {
+            "id": "ip2",
+            "name": "Sous-couche isolante phonique/thermique 5mm rouleau 10m²",
+            "brand": "Leroy Merlin",
+            "price": 19.90,
+            "unit": "m2_per_pot",
+            "coverage_m2": 10,
+            "color": "#d8ccb6"
+        },
+        {
+            "id": "ip3",
+            "name": "Sous-couche isolante fibre de bois 7mm rouleau 8m²",
+            "brand": "Isover",
+            "price": 27.90,
+            "unit": "m2_per_pot",
+            "coverage_m2": 8,
+            "color": "#cbbda0"
+        }
+    ],
+    "fenetre_alu_noir": [
+        {
+            "id": "fa1",
+            "name": "Fenêtre alu noir 1 vantail oscillo-battant",
+            "brand": "Leroy Merlin",
+            "price": 219.0,
+            "width": 60,
+            "height": 60,
+            "color": "#2b2b2b"
+        },
+        {
+            "id": "fa2",
+            "name": "Fenêtre alu noir 1 vantail oscillo-battant",
+            "brand": "Leroy Merlin",
+            "price": 279.0,
+            "width": 80,
+            "height": 95,
+            "color": "#2b2b2b"
+        },
+        {
+            "id": "fa3",
+            "name": "Fenêtre alu noir 2 vantaux oscillo-battant",
+            "brand": "Leroy Merlin",
+            "price": 349.0,
+            "width": 100,
+            "height": 120,
+            "color": "#2b2b2b"
+        },
+        {
+            "id": "fa4",
+            "name": "Fenêtre alu noir 2 vantaux oscillo-battant",
+            "brand": "Leroy Merlin",
+            "price": 429.0,
+            "width": 120,
+            "height": 135,
+            "color": "#2b2b2b"
+        },
+        {
+            "id": "fa5",
+            "name": "Fenêtre alu noir 2 vantaux oscillo-battant",
+            "brand": "Leroy Merlin",
+            "price": 499.0,
+            "width": 140,
+            "height": 150,
+            "color": "#2b2b2b"
+        }
+    ],
+    "porte_milieu_gamme": [
+        {
+            "id": "po1",
+            "name": "Bloc-porte postformé milieu de gamme",
+            "brand": "LMDESIGN",
+            "price": 89.0,
+            "width": 63,
+            "height": 204,
+            "color": "#7a5230"
+        },
+        {
+            "id": "po2",
+            "name": "Bloc-porte postformé milieu de gamme",
+            "brand": "LMDESIGN",
+            "price": 99.0,
+            "width": 73,
+            "height": 204,
+            "color": "#7a5230"
+        },
+        {
+            "id": "po3",
+            "name": "Bloc-porte postformé milieu de gamme",
+            "brand": "LMDESIGN",
+            "price": 109.0,
+            "width": 83,
+            "height": 204,
+            "color": "#7a5230"
+        },
+        {
+            "id": "po4",
+            "name": "Bloc-porte postformé milieu de gamme",
+            "brand": "LMDESIGN",
+            "price": 119.0,
+            "width": 93,
+            "height": 214,
+            "color": "#7a5230"
+        }
+    ],
+    "interrupteur_legrand": [
+        {
+            "id": "il1",
+            "name": "Interrupteur va-et-vient Legrand Dooxie blanc",
+            "brand": "Legrand",
+            "price": 6.90,
+            "unit": "piece",
+            "color": "#ffffff"
+        },
+        {
+            "id": "il2",
+            "name": "Interrupteur simple allumage Legrand Dooxie blanc",
+            "brand": "Legrand",
+            "price": 5.90,
+            "unit": "piece",
+            "color": "#ffffff"
+        },
+        {
+            "id": "il3",
+            "name": "Interrupteur double Legrand Dooxie blanc",
+            "brand": "Legrand",
+            "price": 9.90,
+            "unit": "piece",
+            "color": "#ffffff"
+        }
+    ],
+    "prise_legrand": [
+        {
+            "id": "pr1",
+            "name": "Prise de courant 2P+T Legrand Dooxie blanc",
+            "brand": "Legrand",
+            "price": 5.50,
+            "unit": "piece",
+            "color": "#ffffff"
+        },
+        {
+            "id": "pr2",
+            "name": "Prise de courant avec obturateur Legrand Dooxie",
+            "brand": "Legrand",
+            "price": 6.50,
+            "unit": "piece",
+            "color": "#ffffff"
+        },
+        {
+            "id": "pr3",
+            "name": "Prise double Legrand Dooxie blanc",
+            "brand": "Legrand",
+            "price": 11.90,
+            "unit": "piece",
+            "color": "#ffffff"
+        }
+    ],
+    "toilette": [
+        {
+            "id": "wc1",
+            "name": "WC à poser sortie horizontale Sensea",
+            "brand": "Sensea",
+            "price": 89.0,
+            "unit": "piece",
+            "color": "#ffffff"
+        },
+        {
+            "id": "wc2",
+            "name": "WC suspendu + bâti-support Allibert",
+            "brand": "Allibert",
+            "price": 219.0,
+            "unit": "piece",
+            "color": "#f0f0f0"
+        },
+        {
+            "id": "wc3",
+            "name": "WC à poser sans bride Sensea",
+            "brand": "Sensea",
+            "price": 149.0,
+            "unit": "piece",
+            "color": "#ffffff"
+        }
+    ],
+    "douche": [
+        {
+            "id": "do1",
+            "name": "Receveur de douche 80x80 + paroi Sensea",
+            "brand": "Sensea",
+            "price": 249.0,
+            "unit": "piece",
+            "color": "#d9ecf5"
+        },
+        {
+            "id": "do2",
+            "name": "Receveur de douche extra-plat 90x90 + paroi",
+            "brand": "Allibert",
+            "price": 349.0,
+            "unit": "piece",
+            "color": "#cfe6f0"
+        },
+        {
+            "id": "do3",
+            "name": "Cabine de douche complète 90x90 Sensea",
+            "brand": "Sensea",
+            "price": 449.0,
+            "unit": "piece",
+            "color": "#c3dfec"
+        }
+    ],
+    "baignoire": [
+        {
+            "id": "ba1",
+            "name": "Baignoire rectangulaire acrylique 170x70",
+            "brand": "Sensea",
+            "price": 199.0,
+            "unit": "piece",
+            "color": "#ffffff"
+        },
+        {
+            "id": "ba2",
+            "name": "Baignoire îlot acrylique 170x75",
+            "brand": "Allibert",
+            "price": 549.0,
+            "unit": "piece",
+            "color": "#fafafa"
+        },
+        {
+            "id": "ba3",
+            "name": "Baignoire d'angle acrylique 140x140",
+            "brand": "Sensea",
+            "price": 399.0,
+            "unit": "piece",
+            "color": "#f5f5f5"
+        }
+    ],
+    "mitigeur_douche_bain": [
+        {
+            "id": "md1",
+            "name": "Mitigeur bain-douche mécanique Sensea",
+            "brand": "Sensea",
+            "price": 39.0,
+            "unit": "piece",
+            "color": "#c0c0c0"
+        },
+        {
+            "id": "md2",
+            "name": "Mitigeur bain-douche thermostatique",
+            "brand": "Grohe",
+            "price": 129.0,
+            "unit": "piece",
+            "color": "#b0b0b0"
+        },
+        {
+            "id": "md3",
+            "name": "Colonne de douche mitigeur intégré",
+            "brand": "Sensea",
+            "price": 89.0,
+            "unit": "piece",
+            "color": "#a8a8a8"
+        }
+    ],
+    "meuble_vasque": [
+        {
+            "id": "mv1",
+            "name": "Meuble sous vasque 60cm blanc",
+            "brand": "Sensea",
+            "price": 149.0,
+            "unit": "piece",
+            "color": "#ffffff"
+        },
+        {
+            "id": "mv2",
+            "name": "Meuble double vasque 120cm chêne",
+            "brand": "Allibert",
+            "price": 349.0,
+            "unit": "piece",
+            "color": "#d8b98a"
+        },
+        {
+            "id": "mv3",
+            "name": "Meuble vasque suspendu 80cm gris",
+            "brand": "Sensea",
+            "price": 249.0,
+            "unit": "piece",
+            "color": "#8f8f8f"
+        }
+    ],
+    "mitigeur_vasque": [
+        {
+            "id": "mvr1",
+            "name": "Mitigeur de lavabo classique chromé",
+            "brand": "Sensea",
+            "price": 29.0,
+            "unit": "piece",
+            "color": "#c0c0c0"
+        },
+        {
+            "id": "mvr2",
+            "name": "Mitigeur de vasque design chromé",
+            "brand": "Grohe",
+            "price": 79.0,
+            "unit": "piece",
+            "color": "#b0b0b0"
+        },
+        {
+            "id": "mvr3",
+            "name": "Mitigeur de vasque haut bec chromé",
+            "brand": "Sensea",
+            "price": 59.0,
+            "unit": "piece",
+            "color": "#a8a8a8"
+        }
+    ],
+    "meuble_lave_main": [
+        {
+            "id": "ml1",
+            "name": "Meuble lave-main 40cm blanc",
+            "brand": "Sensea",
+            "price": 89.0,
+            "unit": "piece",
+            "color": "#ffffff"
+        },
+        {
+            "id": "ml2",
+            "name": "Meuble lave-main avec vasque intégrée 45cm",
+            "brand": "Allibert",
+            "price": 129.0,
+            "unit": "piece",
+            "color": "#f0f0f0"
+        },
+        {
+            "id": "ml3",
+            "name": "Lave-main sur pied céramique blanc",
+            "brand": "Sensea",
+            "price": 69.0,
+            "unit": "piece",
+            "color": "#ffffff"
+        }
+    ],
+    "mitigeur_lave_main": [
+        {
+            "id": "mll1",
+            "name": "Mitigeur de lave-main compact chromé",
+            "brand": "Sensea",
+            "price": 24.0,
+            "unit": "piece",
+            "color": "#c0c0c0"
+        },
+        {
+            "id": "mll2",
+            "name": "Mitigeur de lave-main design chromé",
+            "brand": "Grohe",
+            "price": 55.0,
+            "unit": "piece",
+            "color": "#b0b0b0"
+        },
+        {
+            "id": "mll3",
+            "name": "Robinet lave-main mécanique",
+            "brand": "Sensea",
+            "price": 15.0,
+            "unit": "piece",
+            "color": "#a8a8a8"
+        }
+    ],
+    "outillage": [
+        {
+            "id": "out1",
+            "name": "Kit pose parquet stratifié 43 pièces (maillet, cale de frappe, tirage)",
+            "brand": "Leroy Merlin",
+            "price": 19.90,
+            "unit": "piece",
+            "color": "#c9b48a",
+            "url": "https://www.leroymerlin.fr/produits/kit-de-pose-de-parquet-stratifie-43-pieces-maillet-en-caoutchouc-double-face-de-26-cm-avec-bloc-de-frappe-robuste-barre-de-traction-en-acier-robuste-76836644.html"
+        },
+        {
+            "id": "out2",
+            "name": "Kit pose carrelage - Système de nivellement (600 clips, 200 cales, 1 pince)",
+            "brand": "Leroy Merlin",
+            "price": 34.90,
+            "unit": "piece",
+            "color": "#b7c4cf",
+            "url": "https://www.leroymerlin.fr/produits/systeme-de-nivellement-pour-pose-de-carrelage-avec-600-clips-200-cales-et-1-pince-kit-de-base-de-nivellement-70220597.html"
+        },
+        {
+            "id": "out3",
+            "name": "Kit pose carrelage - Kit complet de jointoiement 9 pièces (seau 24L)",
+            "brand": "Leroy Merlin",
+            "price": 39.90,
+            "unit": "piece",
+            "color": "#a9b6ad",
+            "url": "https://www.leroymerlin.fr/produits/kit-complet-de-jointoiement-carrelage-9-pieces-seau-24-l-avec-roulettes-taloches-eponges-et-outils-professionnels-98300879.html"
+        }
+    ]
+}
