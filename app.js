@@ -196,7 +196,9 @@ function createRoom(roomName, baseType) {
     if (!state.height) return 0;
     let gross = 2 * (state.length + state.width) * state.height;
     let openings = 0;
-    state.windows.forEach((w) => { openings += (w.width / 100) * (w.height / 100); });
+    state.windows.forEach((w) => {
+      if (w.selected.size > 0) openings += (w.width / 100) * (w.height / 100);
+    });
     state.doors.forEach((d) => { openings += (d.width / 100) * (d.height / 100); });
     return Math.max(0, gross - openings);
   }
@@ -785,7 +787,9 @@ function createRoom(roomName, baseType) {
 function updateGrandTotal() {
   let total = 0;
   dynamicRoomNames.forEach((name) => { total += rooms[name].getTotal(); });
-  total += rooms["Outillage"].getTotal();
+  if (rooms["Outillage"].isIncludedInBudget()) {
+    total += rooms["Outillage"].getTotal();
+  }
   document.getElementById("grand-total").textContent = `Total général : ${total.toFixed(2)} €`;
 }
 
@@ -893,6 +897,7 @@ function createToolsRoom(roomName) {
 
   const selected = new Set();
   const customItems = []; // { name, price, url, selected: boolean, row }
+  let includeInBudget = true;
 
   const fieldset = document.createElement("fieldset");
   fieldset.className = "section";
@@ -903,6 +908,17 @@ function createToolsRoom(roomName) {
   const galleryHolder = document.createElement("div");
   fieldset.appendChild(galleryHolder);
   renderGallery(galleryHolder, CATALOG.outillage, selected, updateTotal, { multi: true });
+
+  const budgetCheckbox = document.createElement("input");
+  budgetCheckbox.type = "checkbox";
+  budgetCheckbox.checked = true;
+  const budgetLabel = document.createElement("label");
+  budgetLabel.append(budgetCheckbox, " Inclure l'outillage dans le budget final");
+  budgetCheckbox.addEventListener("change", () => {
+    includeInBudget = budgetCheckbox.checked;
+    updateTotal();
+  });
+  fieldset.appendChild(budgetLabel);
 
   const customFieldset = document.createElement("fieldset");
   customFieldset.className = "section";
@@ -1046,7 +1062,14 @@ function createToolsRoom(roomName) {
   panel.appendChild(customFieldset);
   panel.appendChild(totalLabel);
 
-  return { roomName, element: panel, getLineItems, getTotal, getDimensionsSummary };
+  return {
+    roomName,
+    element: panel,
+    getLineItems,
+    getTotal,
+    getDimensionsSummary,
+    isIncludedInBudget: () => includeInBudget,
+  };
 }
 
 
@@ -1060,7 +1083,8 @@ function generateReport() {
     const room = rooms[r];
     const items = room.getLineItems();
     const roomTotal = items.reduce((s, i) => s + i.total, 0);
-    grandTotal += roomTotal;
+    const includedInBudget = !room.isIncludedInBudget || room.isIncludedInBudget();
+    if (includedInBudget) grandTotal += roomTotal;
     summaryRows.push(`<tr><td>${escapeHtml(r)}</td><td class="num">${roomTotal.toFixed(2)} €</td></tr>`);
 
     const rowsHtml = items.length
@@ -1086,7 +1110,7 @@ function generateReport() {
           <thead><tr><th>Description</th><th>Quantité / Surface</th><th>Prix unitaire</th><th>Total</th></tr></thead>
           <tbody>${rowsHtml}</tbody>
         </table>
-        <p class="subtotal">Sous-total ${escapeHtml(r)} : ${roomTotal.toFixed(2)} €</p>
+        <p class="subtotal">Sous-total ${escapeHtml(r)} : ${roomTotal.toFixed(2)} €${includedInBudget ? "" : " (hors budget final)"}</p>
       </section>
     `);
   });
