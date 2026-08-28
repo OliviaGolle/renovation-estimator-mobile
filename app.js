@@ -123,12 +123,34 @@ function paintCost(area, product, coats = 2) {
   return { total: effectiveArea * product.price, pots: null, effectiveArea };
 }
 
+async function addCustomProduct(url, customProducts, selectedSet, opts) {
+  const info = await fetchProductInfo(url);
+  const product = {
+    id: `custom-${customProducts.length}`,
+    name: info.name,
+    price: info.price,
+    url,
+    customCategory: opts.customCategory,
+  };
+  customProducts.push(product);
+  if (!opts.multi) selectedSet.clear();
+  selectedSet.add(product.id);
+  return product;
+}
+
 function renderGallery(container, products, selectedSet, onChange, opts = {}) {
+  const category = opts.customCategory
+    || Object.keys(CATALOG).find((key) => CATALOG[key] === products);
+  const galleryOpts = { ...opts, customCategory: category };
+  const customProducts = (opts.customProducts || []).filter(
+    (product) => product.customCategory === category
+  );
+  const displayProducts = [...products, ...customProducts];
   container.innerHTML = "";
   const grid = document.createElement("div");
   grid.className = "gallery";
   const checkboxes = [];
-  products.forEach((p) => {
+  displayProducts.forEach((p) => {
     const card = document.createElement("div");
     card.className = "card";
     const dimsHtml = opts.showDims && p.width ? `<div class="dims">${p.width} x ${p.height} cm</div>` : "";
@@ -171,6 +193,33 @@ function renderGallery(container, products, selectedSet, onChange, opts = {}) {
     grid.appendChild(card);
   });
   container.appendChild(grid);
+
+  if (opts.allowCustomUrl !== false) {
+    const customForm = document.createElement("div");
+    customForm.className = "dims-row";
+    const urlInput = document.createElement("input");
+    urlInput.type = "url";
+    urlInput.placeholder = "URL d'un produit";
+    const addButton = document.createElement("button");
+    addButton.textContent = "Ajouter depuis l'URL";
+    const status = document.createElement("span");
+    customForm.append(urlInput, addButton, status);
+    addButton.addEventListener("click", async () => {
+      const url = urlInput.value.trim();
+      if (!url) return;
+      addButton.disabled = true;
+      status.textContent = " Récupération...";
+      try {
+        await addCustomProduct(url, opts.customProducts, selectedSet, galleryOpts);
+        renderGallery(container, products, selectedSet, onChange, galleryOpts);
+        onChange();
+      } catch (error) {
+        status.textContent = ` ${error.message}`;
+        addButton.disabled = false;
+      }
+    });
+    container.appendChild(customForm);
+  }
 }
 
 function createRoom(roomName, baseType) {
@@ -188,8 +237,16 @@ function createRoom(roomName, baseType) {
     isolantSelected: new Set(),
     interrupteurSelected: new Set(), priseSelected: new Set(),
     windows: [], doors: [],
+    customProducts: [],
     extraChecked: {}, extraSelected: {},
   };
+
+  function renderRoomGallery(container, products, selectedSet, onChange, opts = {}) {
+    renderGallery(container, products, selectedSet, onChange, {
+      ...opts,
+      customProducts: state.customProducts,
+    });
+  }
 
   function floorArea() { return state.length * state.width; }
   function wallArea() {
@@ -275,7 +332,7 @@ function createRoom(roomName, baseType) {
       mursSub.innerHTML = `<h4>Peintures murs (moyenne gamme, blanche) - Leroy Merlin</h4>`;
       const holder = document.createElement("div");
       mursSub.appendChild(holder);
-      renderGallery(holder, CATALOG.peinture_mur, state.murSelected, updateTotal);
+      renderRoomGallery(holder, CATALOG.peinture_mur, state.murSelected, updateTotal);
     } else { state.murSelected.clear(); }
     updateTotal();
   });
@@ -287,7 +344,7 @@ function createRoom(roomName, baseType) {
       plafondSub.innerHTML = `<h4>Peintures plafond (moyenne gamme, blanche) - Leroy Merlin</h4>`;
       const holder = document.createElement("div");
       plafondSub.appendChild(holder);
-      renderGallery(holder, CATALOG.peinture_plafond, state.plafondSelected, updateTotal);
+      renderRoomGallery(holder, CATALOG.peinture_plafond, state.plafondSelected, updateTotal);
     } else { state.plafondSelected.clear(); }
     updateTotal();
   });
@@ -308,7 +365,7 @@ function createRoom(roomName, baseType) {
         const galleryDiv = document.createElement("div");
         holder.appendChild(galleryDiv);
         state.solSelected.clear();
-        renderGallery(galleryDiv, CATALOG[category], state.solSelected, updateTotal);
+        renderRoomGallery(galleryDiv, CATALOG[category], state.solSelected, updateTotal);
 
         state.primaireSelected.clear();
         state.colleSelected.clear();
@@ -321,7 +378,7 @@ function createRoom(roomName, baseType) {
           holder.appendChild(primaireTitle);
           const primaireDiv = document.createElement("div");
           holder.appendChild(primaireDiv);
-          renderGallery(primaireDiv, CATALOG.primaire_accrochage, state.primaireSelected, updateTotal);
+          renderRoomGallery(primaireDiv, CATALOG.primaire_accrochage, state.primaireSelected, updateTotal);
 
           const colleTitle = document.createElement("h4");
           colleTitle.style.marginTop = "8px";
@@ -329,7 +386,7 @@ function createRoom(roomName, baseType) {
           holder.appendChild(colleTitle);
           const colleDiv = document.createElement("div");
           holder.appendChild(colleDiv);
-          renderGallery(colleDiv, CATALOG.colle_carrelage, state.colleSelected, updateTotal);
+          renderRoomGallery(colleDiv, CATALOG.colle_carrelage, state.colleSelected, updateTotal);
 
           const jointTitle = document.createElement("h4");
           jointTitle.style.marginTop = "8px";
@@ -337,7 +394,7 @@ function createRoom(roomName, baseType) {
           holder.appendChild(jointTitle);
           const jointDiv = document.createElement("div");
           holder.appendChild(jointDiv);
-          renderGallery(jointDiv, CATALOG.joint_carrelage, state.jointSelected, updateTotal);
+          renderRoomGallery(jointDiv, CATALOG.joint_carrelage, state.jointSelected, updateTotal);
         } else if (state.solType === "parquet") {
           const isolantTitle = document.createElement("h4");
           isolantTitle.style.marginTop = "8px";
@@ -345,7 +402,7 @@ function createRoom(roomName, baseType) {
           holder.appendChild(isolantTitle);
           const isolantDiv = document.createElement("div");
           holder.appendChild(isolantDiv);
-          renderGallery(isolantDiv, CATALOG.isolant_parquet, state.isolantSelected, updateTotal);
+          renderRoomGallery(isolantDiv, CATALOG.isolant_parquet, state.isolantSelected, updateTotal);
         }
         updateTotal();
       }
@@ -434,7 +491,7 @@ function createRoom(roomName, baseType) {
       interrupteurSub.innerHTML = `<h4>Interrupteurs Legrand (classique) - Leroy Merlin</h4>`;
       const holder = document.createElement("div");
       interrupteurSub.appendChild(holder);
-      renderGallery(holder, CATALOG.interrupteur_legrand, state.interrupteurSelected, updateTotal, { priceSuffix: "/unité" });
+      renderRoomGallery(holder, CATALOG.interrupteur_legrand, state.interrupteurSelected, updateTotal, { priceSuffix: "/unité" });
     } else if (!show) {
       interrupteurSub.innerHTML = "";
       state.interrupteurSelected.clear();
@@ -450,7 +507,7 @@ function createRoom(roomName, baseType) {
       priseSub.innerHTML = `<h4>Prises Legrand (classique) - Leroy Merlin</h4>`;
       const holder = document.createElement("div");
       priseSub.appendChild(holder);
-      renderGallery(holder, CATALOG.prise_legrand, state.priseSelected, updateTotal, { priceSuffix: "/unité" });
+      renderRoomGallery(holder, CATALOG.prise_legrand, state.priseSelected, updateTotal, { priceSuffix: "/unité" });
     } else if (!show) {
       priseSub.innerHTML = "";
       state.priseSelected.clear();
@@ -496,7 +553,7 @@ function createRoom(roomName, baseType) {
       const g = document.createElement("div");
       galleryHolder.appendChild(g);
       const sorted = closestSort(CATALOG.fenetre_alu_noir, instance.width, instance.height);
-      renderGallery(g, sorted, instance.selected, updateTotal, { showDims: true });
+      renderRoomGallery(g, sorted, instance.selected, updateTotal, { showDims: true, customCategory: "fenetre_alu_noir" });
       updateArea();
     }
     refreshGallery();
@@ -546,7 +603,7 @@ function createRoom(roomName, baseType) {
       const g = document.createElement("div");
       galleryHolder.appendChild(g);
       const sorted = closestSort(CATALOG.porte_milieu_gamme, instance.width, instance.height);
-      renderGallery(g, sorted, instance.selected, updateTotal, { showDims: true });
+      renderRoomGallery(g, sorted, instance.selected, updateTotal, { showDims: true, customCategory: "porte_milieu_gamme" });
       updateArea();
     }
     refreshGallery();
@@ -592,7 +649,7 @@ function createRoom(roomName, baseType) {
           sub.innerHTML = `<h4>${escapeHtml(label)} - Leroy Merlin</h4>`;
           const holder = document.createElement("div");
           sub.appendChild(holder);
-          renderGallery(holder, CATALOG[category], state.extraSelected[category], updateTotal);
+          renderRoomGallery(holder, CATALOG[category], state.extraSelected[category], updateTotal, { customCategory: category });
         } else {
           sub.innerHTML = "";
           state.extraSelected[category].clear();
@@ -615,7 +672,8 @@ function createRoom(roomName, baseType) {
   }
 
   function productById(category, id) {
-    return (CATALOG[category] || []).find((p) => p.id === id);
+    return (CATALOG[category] || []).find((p) => p.id === id)
+      || state.customProducts.find((p) => p.id === id && p.customCategory === category);
   }
 
   function getLineItems() {
@@ -907,7 +965,7 @@ function createToolsRoom(roomName) {
   `;
   const galleryHolder = document.createElement("div");
   fieldset.appendChild(galleryHolder);
-  renderGallery(galleryHolder, CATALOG.outillage, selected, updateTotal, { multi: true });
+  renderGallery(galleryHolder, CATALOG.outillage, selected, updateTotal, { multi: true, allowCustomUrl: false });
 
   const budgetCheckbox = document.createElement("input");
   budgetCheckbox.type = "checkbox";
@@ -958,6 +1016,7 @@ function createToolsRoom(roomName) {
     statusLabel.textContent = "Récupération des informations depuis la page produit...";
     try {
       const info = await fetchProductInfo(url);
+      selected.clear();
       const item = { name: info.name, price: info.price, url, selected: true };
       customItems.push(item);
       renderCustomItem(item);
