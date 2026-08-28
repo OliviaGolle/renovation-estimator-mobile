@@ -24,6 +24,29 @@ const ROOM_EXTRAS = {
 let CATALOG = {};
 const rooms = {}; // roomName -> room controller
 let dynamicRoomNames = []; // currently generated room instance names, in order
+const PROJECT_STORAGE_KEY = "renovation-estimator-project-v1";
+
+const CATEGORY_LABELS = {
+  peinture: "Peinture",
+  sol: "Sol",
+  menuiserie: "Menuiserie",
+  electricite: "Électricité",
+  outillage: "Outillage",
+  equipement: "Équipement",
+};
+
+function productCategory(description) {
+  if (/Peinture/i.test(description)) return "peinture";
+  if (/Sol|isolant|colle|primaire|joint/i.test(description)) return "sol";
+  if (/Fenêtre|Porte/i.test(description)) return "menuiserie";
+  if (/Interrupteur|Prise/i.test(description)) return "electricite";
+  if (/Outillage/i.test(description)) return "outillage";
+  return "equipement";
+}
+
+function isPlausiblePrice(price) {
+  return Number.isFinite(price) && price > 0 && price <= 100000;
+}
 
 function toFloat(v) {
   const n = parseFloat(String(v).replace(",", "."));
@@ -107,6 +130,9 @@ function parseProductHtml(html) {
   if (!name || price === null) {
     throw new Error("Nom ou prix introuvable sur cette page.");
   }
+  if (!isPlausiblePrice(price)) {
+    throw new Error("Le prix récupéré est absent ou incohérent.");
+  }
   return { name: name.trim(), price };
 }
 
@@ -173,6 +199,28 @@ function renderGallery(container, products, selectedSet, onChange, opts = {}) {
       ${linkHtml}
       <label class="choose"><input type="checkbox" ${selectedSet.has(p.id) ? "checked" : ""}> Je choisis</label>
     `;
+    if (p.customCategory) {
+      const editRow = document.createElement("div");
+      editRow.className = "custom-product-form";
+      const nameInput = document.createElement("input");
+      nameInput.value = p.name;
+      nameInput.setAttribute("aria-label", "Nom du produit");
+      const priceInput = document.createElement("input");
+      priceInput.type = "number";
+      priceInput.min = "0.01";
+      priceInput.step = "0.01";
+      priceInput.value = p.price;
+      priceInput.setAttribute("aria-label", "Prix du produit");
+      editRow.append(nameInput, priceInput);
+      card.appendChild(editRow);
+      nameInput.addEventListener("change", () => { p.name = nameInput.value.trim() || p.name; onChange(); });
+      priceInput.addEventListener("change", () => {
+        const price = toFloat(priceInput.value);
+        if (!isPlausiblePrice(price)) { priceInput.value = p.price; return; }
+        p.price = price;
+        onChange();
+      });
+    }
     const checkbox = card.querySelector("input");
     checkboxes.push({ id: p.id, checkbox });
     checkbox.addEventListener("change", () => {
@@ -238,6 +286,8 @@ function createRoom(roomName, baseType) {
     interrupteurSelected: new Set(), priseSelected: new Set(),
     windows: [], doors: [],
     customProducts: [],
+    dimensionInputs: [],
+    checkInputs: {},
     extraChecked: {}, extraSelected: {},
   };
 
@@ -256,8 +306,23 @@ function createRoom(roomName, baseType) {
     state.windows.forEach((w) => {
       if (w.selected.size > 0) openings += (w.width / 100) * (w.height / 100);
     });
-    state.doors.forEach((d) => { openings += (d.width / 100) * (d.height / 100); });
+    state.doors.forEach((d) => {
+      if (d.selected.size > 0) openings += (d.width / 100) * (d.height / 100);
+    });
     return Math.max(0, gross - openings);
+  }
+
+  function wallAreaDetail() {
+    const gross = 2 * (state.length + state.width) * state.height;
+    const openings = wallOpeningsArea();
+    return `${gross.toFixed(2)} m² de murs - ${openings.toFixed(2)} m² d'ouvertures = ${wallArea().toFixed(2)} m²`;
+  }
+
+  function wallOpeningsArea() {
+    let openings = 0;
+    state.windows.forEach((w) => { if (w.selected.size > 0) openings += (w.width / 100) * (w.height / 100); });
+    state.doors.forEach((d) => { if (d.selected.size > 0) openings += (d.width / 100) * (d.height / 100); });
+    return openings;
   }
 
   // ---------- dimensions ----------
@@ -280,6 +345,7 @@ function createRoom(roomName, baseType) {
     label.appendChild(input);
     input.addEventListener("input", () => { onInput(toFloat(input.value)); updateArea(); });
     dimsRow.appendChild(label);
+    state.dimensionInputs.push(input);
     return input;
   }
   makeDimInput("Longueur (m)", (v) => { state.length = v; });
@@ -292,6 +358,9 @@ function createRoom(roomName, baseType) {
     areaLabel.textContent = (state.length && state.width)
       ? `Surface au sol : ${floorArea().toFixed(2)} m²`
       : "Surface au sol : -";
+    if (state.height) {
+      areaLabel.textContent += ` | ${wallAreaDetail()}`;
+    }
     updateTotal();
   }
 
@@ -322,6 +391,7 @@ function createRoom(roomName, baseType) {
     wrapper.appendChild(document.createTextNode(label));
     input.addEventListener("change", () => onChange(input.checked));
     checksGrid.appendChild(wrapper);
+    state.checkInputs[label] = input;
     return input;
   }
 
@@ -572,7 +642,7 @@ function createRoom(roomName, baseType) {
 
   function addDoorInstance() {
     const index = state.doors.length + 1;
-    const instance = { width: 0, height: 0, selected: new Set() };
+    const instance = { width: 73, height: 204, selected: new Set() };
     state.doors.push(instance);
 
     const block = document.createElement("div");
@@ -592,8 +662,10 @@ function createRoom(roomName, baseType) {
       dimsRow2.appendChild(label);
       return input;
     }
-    makeCmInput("Longueur (cm)", (v) => { instance.width = v; });
-    makeCmInput("Largeur (cm)", (v) => { instance.height = v; });
+    const widthInput = makeCmInput("Largeur (cm)", (v) => { instance.width = v; });
+    const heightInput = makeCmInput("Hauteur (cm)", (v) => { instance.height = v; });
+    widthInput.value = instance.width;
+    heightInput.value = instance.height;
 
     const galleryHolder = document.createElement("div");
     block.appendChild(galleryHolder);
@@ -665,10 +737,57 @@ function createRoom(roomName, baseType) {
   const totalLabel = document.createElement("div");
   totalLabel.className = "room-total";
   totalLabel.textContent = "Total pièce : 0.00 €";
+  const categoryLabel = document.createElement("div");
+  categoryLabel.className = "category-subtotals";
+  const warningLabel = document.createElement("div");
+  warningLabel.className = "validation-warning";
 
   function updateTotal() {
     totalLabel.textContent = `Total pièce : ${getTotal().toFixed(2)} €`;
+    categoryLabel.replaceChildren(...Object.entries(getCategoryTotals()).map(([category, total]) => {
+      const item = document.createElement("span");
+      item.textContent = `${CATEGORY_LABELS[category] || category} : ${total.toFixed(2)} €`;
+      return item;
+    }));
+    warningLabel.textContent = getValidationWarnings().join(" ");
     updateGrandTotal();
+    saveProject();
+  }
+
+  function getCategoryTotals() {
+    return getLineItems().reduce((totals, item) => {
+      const category = productCategory(item.description);
+      totals[category] = (totals[category] || 0) + item.total;
+      return totals;
+    }, {});
+  }
+
+  function getValidationWarnings() {
+    const warnings = [];
+    if ((state.length || state.width || state.height) && !(state.length && state.width && state.height)) {
+      warnings.push("Dimensions de pièce incomplètes.");
+    }
+    if (state.murs && !state.murSelected.size) warnings.push("Aucune peinture murale sélectionnée.");
+    if (state.plafond && !state.plafondSelected.size) warnings.push("Aucune peinture de plafond sélectionnée.");
+    if (state.sol && !state.solSelected.size) warnings.push("Aucun revêtement de sol sélectionné.");
+    if (state.fenetre && state.windows.some((w) => !w.width || !w.height || !w.selected.size)) warnings.push("Une fenêtre est incomplète ou sans produit.");
+    if (state.porte && state.doors.some((d) => !d.width || !d.height || !d.selected.size)) warnings.push("Une porte est incomplète ou sans produit.");
+    return warnings;
+  }
+
+  function refresh() {
+    [state.length, state.width, state.height].forEach((value, index) => {
+      if (state.dimensionInputs[index]) state.dimensionInputs[index].value = value || "";
+    });
+    ["Réfection murs", "Réfection plafond", "Sol", "Fenêtre", "Porte"].forEach((label) => {
+      const input = state.checkInputs[label];
+      const value = { "Réfection murs": state.murs, "Réfection plafond": state.plafond, Sol: state.sol, Fenêtre: state.fenetre, Porte: state.porte }[label];
+      if (input && input.checked !== value) {
+        input.checked = value;
+        input.dispatchEvent(new Event("change"));
+      }
+    });
+    updateArea();
   }
 
   function productById(category, id) {
@@ -837,9 +956,11 @@ function createRoom(roomName, baseType) {
   panel.appendChild(dimsFieldset);
   panel.appendChild(worksFieldset);
   if (extrasFieldset) panel.appendChild(extrasFieldset);
+  panel.appendChild(categoryLabel);
+  panel.appendChild(warningLabel);
   panel.appendChild(totalLabel);
 
-  return { roomName, element: panel, getLineItems, getTotal, getDimensionsSummary };
+  return { roomName, element: panel, getLineItems, getTotal, getDimensionsSummary, getCategoryTotals, getValidationWarnings, getState: () => state, refresh };
 }
 
 function updateGrandTotal() {
@@ -849,6 +970,16 @@ function updateGrandTotal() {
     total += rooms["Outillage"].getTotal();
   }
   document.getElementById("grand-total").textContent = `Total général : ${total.toFixed(2)} €`;
+  const completedRooms = dynamicRoomNames.filter((name) => {
+    const room = rooms[name];
+    const state = room.getState();
+    return state.length > 0 && state.width > 0 && state.height > 0
+      && room.getValidationWarnings().length === 0;
+  }).length;
+  const progress = dynamicRoomNames.length
+    ? Math.round((completedRooms / dynamicRoomNames.length) * 100)
+    : 0;
+  document.getElementById("project-progress").textContent = `Avancement : ${progress}%`;
 }
 
 function tabOrder() {
@@ -922,30 +1053,93 @@ function createCoverRoom() {
   });
   fieldset.appendChild(generateBtn);
 
+  const addRoomBtn = document.createElement("button");
+  addRoomBtn.textContent = "Ajouter une pièce";
+  addRoomBtn.addEventListener("click", () => addRoom(ROOM_TYPES[0]));
+  fieldset.appendChild(addRoomBtn);
+
   return { roomName: "Accueil", element: panel };
 }
 
 function regenerateRooms(quantities) {
-  dynamicRoomNames.forEach((name) => {
-    if (rooms[name]) {
-      rooms[name].element.remove();
-      delete rooms[name];
-    }
-  });
-  dynamicRoomNames = [];
-
+  const previousRooms = { ...rooms };
+  const nextNames = [];
   ROOM_TYPES.forEach((type) => {
     const qty = quantities[type] || 0;
     for (let i = 1; i <= qty; i++) {
       const label = qty > 1 ? `${type} ${i}` : type;
-      rooms[label] = createRoom(label, type);
-      dynamicRoomNames.push(label);
+      rooms[label] = previousRooms[label] || createRoom(label, type);
+      nextNames.push(label);
     }
   });
+  dynamicRoomNames.forEach((name) => {
+    if (!nextNames.includes(name)) {
+      rooms[name].element.remove();
+      delete rooms[name];
+    }
+  });
+  dynamicRoomNames = nextNames;
 
   renderTabsAndPanels();
   showRoom(dynamicRoomNames[0] || "Accueil");
   updateGrandTotal();
+  saveProject();
+}
+
+function addRoom(type) {
+  const count = dynamicRoomNames.filter((name) => name === type || name.startsWith(`${type} `)).length;
+  const name = count ? `${type} ${count + 1}` : type;
+  rooms[name] = createRoom(name, type);
+  dynamicRoomNames.push(name);
+  renderTabsAndPanels();
+  showRoom(name);
+  updateGrandTotal();
+  saveProject();
+}
+
+function projectSnapshot() {
+  return {
+    quantities: ROOM_TYPES.reduce((result, type) => {
+      result[type] = dynamicRoomNames.filter((name) => name === type || name.startsWith(`${type} `)).length;
+      return result;
+    }, {}),
+    rooms: dynamicRoomNames.reduce((result, name) => {
+      const state = rooms[name].getState();
+      result[name] = {
+        length: state.length, width: state.width, height: state.height,
+        murs: state.murs, plafond: state.plafond, sol: state.sol,
+        fenetre: state.fenetre, porte: state.porte,
+        interrupteurs: state.interrupteurs, prises: state.prises,
+      };
+      return result;
+    }, {}),
+  };
+}
+
+function saveProject(showMessage = false) {
+  try {
+    localStorage.setItem(PROJECT_STORAGE_KEY, JSON.stringify(projectSnapshot()));
+    if (showMessage) alert("Projet enregistré sur cet appareil.");
+  } catch (error) {
+    if (showMessage) alert(`Enregistrement impossible : ${error.message}`);
+  }
+}
+
+function loadProject() {
+  try {
+    const snapshot = JSON.parse(localStorage.getItem(PROJECT_STORAGE_KEY) || "null");
+    if (!snapshot) { alert("Aucun projet enregistré."); return; }
+    regenerateRooms(snapshot.quantities || {});
+    Object.entries(snapshot.rooms || {}).forEach(([name, values]) => {
+      const state = rooms[name]?.getState();
+      if (state) Object.assign(state, values);
+    });
+    dynamicRoomNames.forEach((name) => rooms[name].refresh?.());
+    updateGrandTotal();
+    alert("Projet repris.");
+  } catch (error) {
+    alert(`Reprise impossible : ${error.message}`);
+  }
 }
 
 function createToolsRoom(roomName) {
@@ -1136,6 +1330,7 @@ function generateReport() {
   const date = new Date().toLocaleDateString("fr-FR");
   let grandTotal = 0;
   const summaryRows = [];
+  const categoryTotals = {};
   const pages = [];
 
   [...dynamicRoomNames, "Outillage"].forEach((r) => {
@@ -1144,6 +1339,10 @@ function generateReport() {
     const roomTotal = items.reduce((s, i) => s + i.total, 0);
     const includedInBudget = !room.isIncludedInBudget || room.isIncludedInBudget();
     if (includedInBudget) grandTotal += roomTotal;
+    items.forEach((item) => {
+      const category = r === "Outillage" ? "outillage" : productCategory(item.description);
+      categoryTotals[category] = (categoryTotals[category] || 0) + item.total;
+    });
     summaryRows.push(`<tr><td>${escapeHtml(r)}</td><td class="num">${roomTotal.toFixed(2)} €</td></tr>`);
 
     const rowsHtml = items.length
@@ -1182,6 +1381,11 @@ function generateReport() {
         <thead><tr><th>Pièce</th><th>Sous-total</th></tr></thead>
         <tbody>${summaryRows.join("")}</tbody>
       </table>
+      <h2>Synthèse par catégorie</h2>
+      <table>
+        <thead><tr><th>Catégorie</th><th>Total</th></tr></thead>
+        <tbody>${Object.entries(categoryTotals).map(([category, total]) => `<tr><td>${escapeHtml(CATEGORY_LABELS[category] || category)}</td><td class="num">${total.toFixed(2)} €</td></tr>`).join("")}</tbody>
+      </table>
       <p class="grand-total">TOTAL GÉNÉRAL ESTIMÉ : ${grandTotal.toFixed(2)} €</p>
       <p class="disclaimer">Prix indicatifs basés sur des produits milieu/moyenne gamme de type Leroy Merlin
       (Luxens, Artens, Sensa, LMDESIGN, Sensea, Legrand Dooxie...). À vérifier et ajuster selon les
@@ -1206,6 +1410,8 @@ async function init() {
   updateGrandTotal();
 
   document.getElementById("generate-report-btn").addEventListener("click", generateReport);
+  document.getElementById("save-project-btn").addEventListener("click", () => saveProject(true));
+  document.getElementById("load-project-btn").addEventListener("click", loadProject);
   document.getElementById("print-btn").addEventListener("click", () => window.print());
   document.getElementById("back-btn").addEventListener("click", () => {
     document.getElementById("report-view").classList.add("hidden");

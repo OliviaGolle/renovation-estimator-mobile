@@ -30,6 +30,7 @@ body {
 }
 #app-header h1 { font-size: 17px; margin: 0; }
 #grand-total { font-weight: bold; font-size: 15px; }
+#project-progress { font-size: 12px; opacity: 0.9; }
 
 #tabs {
   display: flex;
@@ -143,6 +144,14 @@ fieldset.section legend { font-weight: bold; padding: 0 6px; color: var(--primar
   font-weight: bold;
 }
 #generate-tabs-btn, .primary-btn { margin-top: 8px; }
+#app-footer button { border: 1px solid var(--border); background: #fff; color: var(--primary); padding: 9px 12px; border-radius: 6px; font-size: 13px; }
+#app-footer #generate-report-btn { background: var(--primary); color: #fff; }
+.calculation-detail { color: #444; font-style: italic; margin: 4px 0; }
+.validation-warning { color: #9b2c2c; font-size: 13px; margin: 6px 0; }
+.category-subtotals { display: grid; grid-template-columns: repeat(auto-fit, minmax(145px, 1fr)); gap: 6px; margin-top: 8px; font-size: 13px; }
+.category-subtotals span { background: #f0f2f4; padding: 6px; border-radius: 4px; }
+.custom-product-form { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.custom-product-form input { min-width: 220px; padding: 7px; }
 
 .hidden { display: none !important; }
 
