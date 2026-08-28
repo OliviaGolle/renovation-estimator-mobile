@@ -632,6 +632,26 @@
             "unit": "piece",
             "color": "#d7b98e",
             "url": "https://www.leroymerlin.fr/produits/kit-de-peinture-hardstar-n-64-set-de-rouleau-de-peinture-bac-a-peinture-film-de-protection-93366433.html"
+        },
+        {
+            "id": "out5",
+            "name": "Bâche peinture TECPLAST transparente 3 x 25 m - 40 microns",
+            "brand": "TECPLAST",
+            "price": 26.99,
+            "unit": "rouleau",
+            "coverage_m2": 75,
+            "color": "#d9e4e8",
+            "url": "https://www.amazon.fr/dp/B01GBBAYKW"
+        },
+        {
+            "id": "out6",
+            "name": "Lot de 4 bâches de protection peinture autocollantes 2,4 x 20 m",
+            "brand": "LCOUACEO",
+            "price": 19.99,
+            "unit": "rouleau",
+            "coverage_m2": 192,
+            "color": "#dce8d8",
+            "url": "https://www.amazon.fr/dp/B0FCF6PVGN"
         }
     ]
 }
