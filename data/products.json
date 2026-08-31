@@ -652,6 +652,70 @@
             "coverage_m2": 192,
             "color": "#dce8d8",
             "url": "https://www.amazon.fr/dp/B0FCF6PVGN"
+        },
+        {
+            "id": "out7",
+            "name": "Enduit de rebouchage en pâte prêt à l'emploi Axton 4 kg",
+            "brand": "Axton",
+            "price": 12.90,
+            "unit": "piece",
+            "url": "https://www.leroymerlin.fr/produits/enduit-de-rebouchage-en-pate-pret-a-emploi-axton-4kg-83972741.html"
+        },
+        {
+            "id": "out8",
+            "name": "Bande à joint grillagée Solid 20 m x 45 mm",
+            "brand": "Solid",
+            "price": 4.99,
+            "unit": "rouleau",
+            "url": "https://www.leroymerlin.fr/produits/bande-a-joint-grillagee-solid-20-ml-largeur-45mm-vendu-a-unite-89863820.html"
+        },
+        {
+            "id": "out9",
+            "name": "Porte-papier de verre pour ponçage manuel 18 x 8,5 x 6,5 cm",
+            "brand": "Leroy Merlin",
+            "price": 3.99,
+            "unit": "piece",
+            "url": "https://www.leroymerlin.fr/produits/porte-papier-de-verre-outils-de-polissage-des-murs-et-du-bois-dimensions-18-x-8-5-x-6-5-cm-75620842.html"
+        },
+        {
+            "id": "out10",
+            "name": "Lot de 5 feuilles abrasives Dexter pour ponceuse manuelle, grain 80",
+            "brand": "Dexter",
+            "price": 2.59,
+            "unit": "lot",
+            "url": "https://www.leroymerlin.fr/produits/lot-de-5-feuilles-abrasives-dexter-pour-ponceuse-manuelle-grains-80-80126076.html"
+        },
+        {
+            "id": "out11",
+            "name": "Lot de 2 masques de protection anti-poussières FFP3 3M",
+            "brand": "3M",
+            "price": 9.99,
+            "unit": "lot",
+            "url": "https://www.leroymerlin.fr/produits/lot-de-2-masques-de-protection-anti-poussieres-ffp3-3m-81884160.html"
+        },
+        {
+            "id": "out12",
+            "name": "Kit de 13 outils de calfeutrage et retrait de joints silicone",
+            "brand": "Leroy Merlin",
+            "price": 9.90,
+            "unit": "kit",
+            "url": "https://www.leroymerlin.fr/produits/kit-de-13-outils-de-calfeutrage-5-en-1-outil-de-retrait-de-joints-de-calfeutrage-en-silicone-grattoir-a-residus-de-colle-vert-95907176.html"
+        },
+        {
+            "id": "out13",
+            "name": "Lot de 3 couteaux à enduire Dexter 4, 8 et 20 cm",
+            "brand": "Dexter",
+            "price": 7.99,
+            "unit": "lot",
+            "url": "https://www.leroymerlin.fr/produits/lot-de-3-couteaux-a-enduire-4-8-20-cm-dexter-83628647.html"
+        },
+        {
+            "id": "out14",
+            "name": "Lot de 2 mastics étanchéité cuisine et bain Axton blanc 280 ml",
+            "brand": "Axton",
+            "price": 12.90,
+            "unit": "lot",
+            "url": "https://www.leroymerlin.fr/produits/lot-de-2-mastics-etancheite-cuisine-et-bain-axton-blanc-280ml-90202006.html"
         }
     ]
 }
