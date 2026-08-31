@@ -1,4 +1,4 @@
-const CACHE_NAME = "renovation-estimator-v13";
+const CACHE_NAME = "renovation-estimator-v14";
 const ASSETS = [
   "./",
   "./index.html",
@@ -26,6 +26,14 @@ self.addEventListener("activate", (event) => {
 
 self.addEventListener("fetch", (event) => {
   event.respondWith(
-    caches.match(event.request).then((cached) => cached || fetch(event.request))
+    fetch(event.request)
+      .then((response) => {
+        if (event.request.method === "GET" && response.ok) {
+          const cachedResponse = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, cachedResponse));
+        }
+        return response;
+      })
+      .catch(() => caches.match(event.request))
   );
 });
