@@ -1046,10 +1046,26 @@ function createCoverRoom() {
   });
   fieldset.appendChild(generateBtn);
 
+  const addRoomControls = document.createElement("div");
+  addRoomControls.className = "add-room-controls";
+  const roomTypeSelect = document.createElement("select");
+  roomTypeSelect.setAttribute("aria-label", "Type de pièce à ajouter");
+  ROOM_TYPES.forEach((type) => {
+    const option = document.createElement("option");
+    option.value = type;
+    option.textContent = type;
+    roomTypeSelect.appendChild(option);
+  });
+
   const addRoomBtn = document.createElement("button");
   addRoomBtn.textContent = "Ajouter une pièce";
-  addRoomBtn.addEventListener("click", () => addRoom(ROOM_TYPES[0]));
-  fieldset.appendChild(addRoomBtn);
+  addRoomBtn.addEventListener("click", () => {
+    const type = roomTypeSelect.value;
+    addRoom(type);
+    inputs[type].value = String(toInt(inputs[type].value) + 1);
+  });
+  addRoomControls.append(roomTypeSelect, addRoomBtn);
+  fieldset.appendChild(addRoomControls);
 
   return { roomName: "Accueil", element: panel };
 }
