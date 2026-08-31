@@ -81,7 +81,7 @@ fieldset.section legend { font-weight: bold; padding: 0 6px; color: var(--primar
 .counts-grid { display: flex; flex-wrap: wrap; gap: 16px; padding: 6px 0; }
 .counts-grid input[type="number"] { width: 70px; padding: 6px; border: 1px solid var(--border); border-radius: 6px; }
 .add-room-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 8px; }
-.add-room-controls select { min-height: 42px; padding: 0 8px; border: 1px solid var(--border); border-radius: 6px; background: #fff; font-size: 14px; }
+.add-room-controls input { min-height: 42px; min-width: 190px; padding: 0 8px; border: 1px solid var(--border); border-radius: 6px; background: #fff; font-size: 14px; }
 .add-room-controls button { margin-top: 0; }
 
 .subsection { padding: 8px 10px 12px; border-top: 1px solid var(--border); }

@@ -24,6 +24,7 @@ const ROOM_EXTRAS = {
 let CATALOG = {};
 const rooms = {}; // roomName -> room controller
 let dynamicRoomNames = []; // currently generated room instance names, in order
+let customRoomNames = [];
 const PROJECT_STORAGE_KEY = "renovation-estimator-project-v1";
 
 const CATEGORY_LABELS = {
@@ -1048,23 +1049,29 @@ function createCoverRoom() {
 
   const addRoomControls = document.createElement("div");
   addRoomControls.className = "add-room-controls";
-  const roomTypeSelect = document.createElement("select");
-  roomTypeSelect.setAttribute("aria-label", "Type de pièce à ajouter");
-  ROOM_TYPES.forEach((type) => {
-    const option = document.createElement("option");
-    option.value = type;
-    option.textContent = type;
-    roomTypeSelect.appendChild(option);
-  });
+  const roomNameInput = document.createElement("input");
+  roomNameInput.type = "text";
+  roomNameInput.placeholder = "Nom de la pièce";
+  roomNameInput.setAttribute("aria-label", "Nom de la pièce à ajouter");
 
   const addRoomBtn = document.createElement("button");
   addRoomBtn.textContent = "Ajouter une pièce";
   addRoomBtn.addEventListener("click", () => {
-    const type = roomTypeSelect.value;
-    addRoom(type);
-    inputs[type].value = String(toInt(inputs[type].value) + 1);
+    const name = roomNameInput.value.trim();
+    if (!name) {
+      roomNameInput.focus();
+      return;
+    }
+    if (!addCustomRoom(name)) {
+      alert("Une pièce porte déjà ce nom.");
+      return;
+    }
+    roomNameInput.value = "";
   });
-  addRoomControls.append(roomTypeSelect, addRoomBtn);
+  roomNameInput.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") addRoomBtn.click();
+  });
+  addRoomControls.append(roomNameInput, addRoomBtn);
   fieldset.appendChild(addRoomControls);
 
   return { roomName: "Accueil", element: panel };
@@ -1081,6 +1088,10 @@ function regenerateRooms(quantities) {
       nextNames.push(label);
     }
   });
+  customRoomNames.forEach((name) => {
+    rooms[name] = previousRooms[name] || createRoom(name);
+    nextNames.push(name);
+  });
   dynamicRoomNames.forEach((name) => {
     if (!nextNames.includes(name)) {
       rooms[name].element.remove();
@@ -1095,15 +1106,16 @@ function regenerateRooms(quantities) {
   saveProject();
 }
 
-function addRoom(type) {
-  const count = dynamicRoomNames.filter((name) => name === type || name.startsWith(`${type} `)).length;
-  const name = count ? `${type} ${count + 1}` : type;
-  rooms[name] = createRoom(name, type);
+function addCustomRoom(name) {
+  if (rooms[name]) return false;
+  rooms[name] = createRoom(name);
   dynamicRoomNames.push(name);
+  customRoomNames.push(name);
   renderTabsAndPanels();
   showRoom(name);
   updateGrandTotal();
   saveProject();
+  return true;
 }
 
 function projectSnapshot() {
@@ -1112,6 +1124,7 @@ function projectSnapshot() {
       result[type] = dynamicRoomNames.filter((name) => name === type || name.startsWith(`${type} `)).length;
       return result;
     }, {}),
+    customRoomNames: [...customRoomNames],
     rooms: dynamicRoomNames.reduce((result, name) => {
       const state = rooms[name].getState();
       result[name] = {
@@ -1138,6 +1151,7 @@ function loadProject() {
   try {
     const snapshot = JSON.parse(localStorage.getItem(PROJECT_STORAGE_KEY) || "null");
     if (!snapshot) { alert("Aucun projet enregistré."); return; }
+    customRoomNames = Array.isArray(snapshot.customRoomNames) ? snapshot.customRoomNames : [];
     regenerateRooms(snapshot.quantities || {});
     Object.entries(snapshot.rooms || {}).forEach(([name, values]) => {
       const state = rooms[name]?.getState();
